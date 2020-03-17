@@ -1,6 +1,7 @@
 #define NTHREAD 16            // Maximum number of threads each process can hold
 
 #include "kthread.h"
+int type;
 
 // Per-CPU state
 struct cpu {
@@ -13,6 +14,8 @@ struct cpu {
   int intena;                  // Were interrupts enabled before pushcli?
   struct proc *proc;           // The process running on this cpu or null
   struct thread *thread;       // The thread running on this cpu or null
+
+  struct cpu *cpu;
 };
 
 extern struct cpu cpus[NCPU];
@@ -43,7 +46,7 @@ struct thread{
   char *kstack;                 // Bottom of kernel stack for this process
   enum threadstate state;       // Thread state
   int tid;                      // Thread ID
-  struct trapframe *tf;          // Trap frame for current syscall
+  struct trapframe *tf;         // Trap frame for current syscall
   struct context *context;      // swtch() here to run process
   void *chan;                   // If non-zero, sleeping on chan
   int killed;                   // If non-zero, have been killed
@@ -55,18 +58,20 @@ enum procstate { UNUSED, EMBRYO, RUNNABLE, ZOMBIE };
 struct proc {
   uint sz;                     // Size of process memory (bytes)
   pde_t* pgdir;                // Page table
-  //char *kstack;                // Bottom of kernel stack for this process
+  char *kstack;                // Bottom of kernel stack for this process
   enum procstate state;        // Process state
   int pid;                     // Process ID
   struct proc *parent;         // Parent process
-  //struct trapframe *tf;        // Trap frame for current syscall
-  //struct context *context;     // swtch() here to run process
-  //void *chan;                  // If non-zero, sleeping on chan
+  struct trapframe *tf;        // Trap frame for current syscall
+  struct context *context;     // swtch() here to run process
+  void *chan;                  // If non-zero, sleeping on chan
   int killed;                  // If non-zero, have been killed
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
   struct thread threads[NTHREAD]; // Process threads table
+  int priority;                // Process priority
+  int lastrun;                 // Process that was last run
 };
 
 // Process memory is laid out contiguously, low addresses first:

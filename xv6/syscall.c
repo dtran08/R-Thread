@@ -111,7 +111,7 @@ extern int sys_mutex_alloc_kthread(void);
 extern int sys_mutex_dealloc_kthread(void);
 extern int sys_mutex_lock_kthread(void);
 extern int sys_mutex_unlock_kthread(void);
-
+extern int sys_setpriority(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -142,7 +142,8 @@ static int (*syscalls[])(void) = {
 [SYS_mutex_alloc_kthread] sys_mutex_alloc_kthread,
 [SYS_mutex_dealloc_kthread] sys_mutex_dealloc_kthread,
 [SYS_mutex_lock_kthread]  sys_mutex_lock_kthread,
-[SYS_mutex_unlock_kthread]  sys_mutex_unlock_kthread
+[SYS_mutex_unlock_kthread]  sys_mutex_unlock_kthread,
+[SYS_setpriority] sys_setpriority,
 };
 
 void

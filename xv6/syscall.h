@@ -28,3 +28,5 @@
 #define SYS_mutex_dealloc_kthread   27
 #define SYS_mutex_lock_kthread  28
 #define SYS_mutex_unlock_kthread    29
+#define SYS_setpriority 30
+

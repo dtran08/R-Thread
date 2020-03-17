@@ -6,6 +6,12 @@
 #include "memlayout.h"
 #include "mmu.h"
 #include "proc.h"
+#include "spinlock.h"
+
+struct {
+  struct spinlock lock;
+  struct proc proc[NPROC];
+} ptable;
 
 int
 sys_fork(void)
@@ -156,10 +162,68 @@ sys_mutex_lock_kthread(void)
 }
 
 int 
-sys_mutex_unlock_kthread(void){
+sys_mutex_unlock_kthread(void)
+{
   int id_mutex;
   if(argint(0, &id_mutex) < 0){
     return -1;
   }
   return mutex_unlock_kthread(id_mutex);
 }
+
+int
+sys_setpriority(void)
+{
+  int pid;
+  int priority;
+  argint(0,&pid);
+  argint(1,&priority);
+  acquire(&ptable.lock);
+  struct proc *p;
+  
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
+    if(p->pid == pid) {
+      p->priority = priority;
+      p->state = RUNNABLE;
+      sched();
+      release(&ptable.lock);
+      return 0;
+    }
+  }
+  
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
+    cprintf("scanning, current pid %d, priority: %d\n", p->pid, p->priority);
+  }
+
+  release(&ptable.lock);
+  return -1;
+}
+
+/*int
+sys_clone(void)
+{
+  void * fcn = 0;
+  void * arg = 0;
+  void * stack = 0;
+
+  if(argint(0, (int *) &fcn) < 0)
+    return -1;
+
+  if(argint(1, (int *) &arg) < 0)
+    return -1
+
+  if(argint(2, (int *) &stack) < 0)
+    return -1
+
+  return clone(fcn, arg, stack);
+}
+
+int sys_join(void)
+{
+  void ** stack = 0;
+  if(argint(0, (int *) &stack) < 0)
+    return -1
+
+  return join(stack);
+}*/
+

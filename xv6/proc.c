@@ -47,6 +47,8 @@ extern void release_ptable(){
 }
 static void wakeup1(void *chan);
 
+// for yield
+int flag = 0;
 
 void
 pinit(void)
@@ -177,7 +179,7 @@ static struct proc*
 allocproc(void)
 {
   struct proc *p;
-
+  char *sp;
 
   acquire(&ptable.lock);
 
@@ -191,8 +193,24 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
-
+  p->priority = 2;
+  p->lastrun = 0;
   release(&ptable.lock);
+  
+  // Allocate kernel stack
+  if((p->kstack = kalloc()) == 0) {
+    p->state = UNUSED;
+    return 0;
+  }
+  sp = p->kstack + KSTACKSIZE;
+
+  sp -= 4;
+  *(uint*)sp = (uint)trapret;
+
+  sp -= sizeof *p->context;
+  p->context = (struct context*)sp;
+  memset(p->context, 0, sizeof *p->context);
+  p->context->eip = (uint)forkret;
 
   return p;
 }
@@ -488,6 +506,7 @@ scheduler(void)
   struct proc *p;
   struct thread *t;
   struct cpu *c = mycpu();
+  //struct proc *pnext;
   c->proc = 0;
   c->thread = 0;
   for(;;){
@@ -496,6 +515,8 @@ scheduler(void)
 
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
+    
+    // Round robin
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
       if(p->state != RUNNABLE)
         continue;
@@ -521,9 +542,58 @@ scheduler(void)
       }
       
       
-    }
-    release(&ptable.lock);
+    } 
 
+    // Priority
+/*    int max = 0;
+    for(pnext = ptable.proc; pnext < &ptable.proc[NPROC]; pnext++) {
+      if(pnext->state != RUNNABLE) {
+        continue;
+      }
+      if(max == 0) {
+        max = pnext->priority;
+      }
+      if(max > 0) {
+        if(max >= pnext->priority) {
+          max = pnext->priority;
+        }
+      }
+    }
+
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
+      if(p->state != RUNNABLE) {
+        continue;
+      }
+      //for(t = p->threads; t < &p->threads[NTHREAD]; t++) {
+        //if(t->state == T_RUNNABLE) {
+          if(max == p->priority) {
+            if((p->lastrun % 2) == 0) {
+              //c->proc = p;
+              //c->thread = t;
+              c->proc = p;
+              p->lastrun++;
+            }
+            else {
+              p->lastrun--;
+            }
+          }
+          else {
+            continue;
+          }
+          t = p->threads;
+          switchuvm(p, t);
+          //t->state = T_RUNNING;
+          //swtch(&(c->scheduler), t->context);
+          swtch(&(c->scheduler), p->context);
+          switchkvm();
+          //c->proc = 0;
+          //c->thread = 0;
+          c->proc = 0;
+        //}
+      //} 
+    } 
+*/
+    release(&ptable.lock);    
   }
 }
 
@@ -557,6 +627,10 @@ sched(void)
 void
 yield(void)
 {
+  if(flag) {
+    cprintf("%d (%d)| ", myproc()->pid, myproc()->priority);
+  }
+
   acquire(&ptable.lock);  //DOC: yieldlock
   myproc()->state = RUNNABLE;
   mythread()->state = T_RUNNABLE;
