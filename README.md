@@ -32,7 +32,7 @@ This simple chmod command on terminal allows the user to read and execute the fi
 ## Tests
 Once compiled and inside the xv6, type `ls`. Doing so ensures that a list of commands and functions from the Makefile show and you can choose which one to run. 
 
-To test the kernel level threads, use `kernelthreads`, and to test user level threads, use `uthreads`.
+To test the kernel level threads, use `kernelthreads`, and to test user level threads, use `uthread`.
 
 ## Credits
 We first tried to implement everything ourselves but got stuck pretty often and did not know where to go, even with the professor and TA's help. We only had a bit under a quarter to implement everything. After a quick google search, we found a couple resources to get inspiration from for our project.
