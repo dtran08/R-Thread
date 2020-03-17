@@ -6,7 +6,8 @@ In this project we decided to extend the classic xv6 from MIT (https://pdos.csai
 
 ## Prerequisites
 -xv6 can already run on your local machine.
--a working copy of virtualbox and vagrant
+
+-a working copy of virtualbox and vagrant.
 
 ## How to run?
 Initially, we attempted using Travis CI to run a simple demo of this, however the .travis.yml file would only let us initiate xv6 but not run any commands through its shell. We followed through with running it either on the sledge server, or more efficiently, a VM (instructions from CS153 at https://www.cs.ucr.edu/~nael/cs153/labs.html).
