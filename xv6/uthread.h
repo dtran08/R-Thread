@@ -10,7 +10,7 @@
 
 //max num threads, stack bit size
 #define STACK_SIZE  8192
-#define MAX_THREAD  5
+#define MAX_THREAD  65
 
 struct thread {
   int sp;//sp stack pointer

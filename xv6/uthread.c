@@ -60,6 +60,78 @@ int main(int argc, char *argv[]) {
   thread_create("Thread3",secondThread);
   thread_create("Thread4",secondThread);
 
+  thread_create("Thread5",firstThread);
+  thread_create("Thread6",firstThread);
+  thread_create("Thread7",secondThread);
+  thread_create("Thread8",secondThread);
+
+  thread_create("Thread9",firstThread);
+  thread_create("Thread10",firstThread);
+  thread_create("Thread11",secondThread);
+  thread_create("Thread12",secondThread);
+
+  thread_create("Thread13",firstThread);
+  thread_create("Thread14",firstThread);
+  thread_create("Thread15",secondThread);
+  thread_create("Thread16",secondThread);
+
+
+  thread_create("Thread17",firstThread);
+  thread_create("Thread18",firstThread);
+  thread_create("Thread19",secondThread);
+  thread_create("Thread20",secondThread);
+
+  thread_create("Thread21",firstThread);
+  thread_create("Thread22",firstThread);
+  thread_create("Thread23",secondThread);
+  thread_create("Thread24",secondThread);
+
+  thread_create("Thread25",firstThread);
+  thread_create("Thread26",firstThread);
+  thread_create("Thread27",secondThread);
+  thread_create("Thread28",secondThread);
+
+  thread_create("Thread29",firstThread);
+  thread_create("Thread30",firstThread);
+  thread_create("Thread31",secondThread);
+  thread_create("Thread32",secondThread);
+
+  thread_create("Thread33",firstThread);
+  thread_create("Thread34",firstThread);
+  thread_create("Thread35",secondThread);
+  thread_create("Thread36",secondThread);
+
+  thread_create("Thread37",firstThread);
+  thread_create("Thread38",firstThread);
+  thread_create("Thread39",secondThread);
+  thread_create("Thread40",secondThread);
+
+  thread_create("Thread41",firstThread);
+  thread_create("Thread42",firstThread);
+  thread_create("Thread43",secondThread);
+  thread_create("Thread44",secondThread);
+
+  thread_create("Thread45",firstThread);
+  thread_create("Thread46",firstThread);
+  thread_create("Thread47",secondThread);
+  thread_create("Thread48",secondThread);
+
+  thread_create("Thread49",firstThread);
+  thread_create("Thread50",firstThread);
+  thread_create("Thread51",secondThread);
+  thread_create("Thread52",secondThread);
+
+  thread_create("Thread53",firstThread);
+  thread_create("Thread54",firstThread);
+  thread_create("Thread55",secondThread);
+  thread_create("Thread56",secondThread);
+
+
+  thread_create("Thread57",firstThread);
+  thread_create("Thread58",firstThread);
+  thread_create("Thread59",secondThread);
+  thread_create("Thread60",secondThread);
+  
   thread_schedule();
   return 0;
 }
